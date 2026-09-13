@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading Test 3 — The Message and the Machine</title>
+<style>
+:root{
+  --ink:#241B2E; --plum:#5B3A70; --plum2:#7A54934D; --bronze:#C17A2E; --sage:#3F7A63;
+  --red:#B5433F; --paper:#F6F4F8; --white:#fff; --line:#DBD2E3; --muted:#6B6076; --lilac:#EFE9F4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",Roboto,system-ui,-apple-system,Arial,sans-serif;font-size:18px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:60;background:var(--ink);color:#fff;border-bottom:4px solid var(--bronze)}
+.bar-in{max-width:1400px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:16.5px}
+.brand span{color:var(--bronze)}
+.stats{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stat{background:rgba(255,255,255,.13);border-radius:999px;padding:4px 13px;font-size:14.5px;font-weight:600;white-space:nowrap}
+.stat b{color:var(--bronze)}
+
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.05rem;line-height:1.2;margin:.55em 0 .2em}
+h2{font-family:Georgia,serif;font-size:1.4rem;margin:1.3em 0 .45em}
+h3{font-size:1.08rem;margin:1.1em 0 .35em}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:18px 0}
+.btn{font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:10px;padding:13px 22px;
+  background:var(--plum);color:#fff;transition:background .2s,transform .08s}
+.btn:hover{background:#6f4788}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.alt{background:#fff;color:var(--plum);border:2px solid var(--plum)}
+.btn.alt:hover{background:var(--lilac)}
+.btn.gold{background:var(--bronze);color:#2C1B00}
+.btn.gold:hover{background:#d08a37}
+.btn.sm{padding:8px 15px;font-size:15px;border-radius:8px}
+:focus-visible{outline:3px solid var(--bronze);outline-offset:2px}
+.hide{display:none !important}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.lead{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.kicker{color:var(--plum);font-weight:700;font-size:15px}
+.note{background:var(--lilac);border-left:5px solid var(--plum);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.warn{background:#FFF3E2;border-left:5px solid var(--bronze);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+input[type=text]{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
+input[type=text]:focus{border-color:var(--plum)}
+select{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
+select:focus{border-color:var(--plum)}
+label.fld{display:block;font-weight:600;margin:14px 0 6px}
+
+/* ---------- teaching ---------- */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.step{font-size:14px;font-weight:700;border-radius:999px;padding:6px 14px;background:#fff;border:2px solid var(--line);color:var(--muted)}
+.step.on{background:var(--plum);border-color:var(--plum);color:#fff}
+.step.ok{background:var(--sage);border-color:var(--sage);color:#fff}
+.tbox{border:1px solid var(--line);border-left:6px solid var(--bronze);border-radius:0 12px 12px 0;background:#fff;padding:16px 18px;margin:14px 0}
+.tbox h4{margin:0 0 6px;font-size:1.02rem;color:var(--plum)}
+.trap{border-left-color:var(--red)}
+.trap h4{color:var(--red)}
+ol.method{margin:6px 0 0 20px;padding:0}
+ol.method li{margin:6px 0}
+.mini{background:var(--lilac);border-radius:12px;padding:16px;margin-top:16px}
+
+/* ---------- split screen ---------- */
+#split{display:flex;height:calc(100vh - 58px);position:relative;background:var(--paper)}
+#pane1,#pane2{overflow-y:auto;padding:20px 22px 80px}
+#pane1{flex:0 0 50%;background:#fff;border-right:1px solid var(--line)}
+#pane2{flex:1 1 auto}
+#divider{width:12px;cursor:col-resize;background:var(--lilac);flex:0 0 12px;position:relative;touch-action:none}
+#divider::after{content:"";position:absolute;top:50%;left:3px;width:6px;height:52px;margin-top:-26px;
+  background:var(--plum);border-radius:99px;opacity:.5}
+#divider:hover::after{opacity:1}
+.passage{font-family:Georgia,"Times New Roman",serif;font-size:1.06rem;line-height:1.72;max-width:66ch}
+.passage p{margin:0 0 1.05em}
+.pl{display:inline-block;font-family:"Segoe UI",sans-serif;font-weight:700;color:#fff;background:var(--plum);
+  width:26px;height:26px;line-height:26px;text-align:center;border-radius:6px;margin-right:9px;font-size:14px;vertical-align:2px}
+.passage p.lit{background:#FFF2D6;border-radius:6px;box-shadow:0 0 0 8px #FFF2D6}
+.ptitle{font-family:Georgia,serif;font-size:1.6rem;margin:0 0 .1em}
+.psub{color:var(--muted);font-size:15px;margin-bottom:18px}
+
+.qgrp{margin-bottom:28px}
+.qgrp h3{margin-top:0;color:var(--plum);font-size:1.12rem}
+.inst{background:var(--lilac);border-radius:10px;padding:11px 14px;font-size:15.5px;margin-bottom:14px}
+.qitem{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+.qn{flex:0 0 32px;height:32px;line-height:30px;text-align:center;border:2px solid var(--plum);color:var(--plum);
+  border-radius:8px;font-weight:700;font-size:15px;background:#fff}
+.qn.filled{background:var(--plum);color:#fff}
+.qbody{flex:1 1 auto;min-width:0}
+.opts label{display:block;border:2px solid var(--line);border-radius:9px;padding:10px 13px;margin:7px 0;cursor:pointer;background:#fff}
+.opts label:hover{border-color:var(--plum);background:var(--lilac)}
+.opts input{margin-right:9px}
+.opts label.on{border-color:var(--plum);background:var(--lilac)}
+table.tbl{width:100%;border-collapse:collapse;font-size:.95rem;background:#fff;margin:8px 0}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+table.tbl th{background:var(--plum);color:#fff;font-weight:600}
+.inline-in{display:inline-block;width:150px;margin:0 3px}
+.sumtext{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;line-height:2.1}
+.wordbox{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;background:#fff;
+  border:2px dashed var(--plum);border-radius:10px;padding:12px;margin:10px 0}
+.wordbox div{font-size:15.5px}
+.wordbox b{color:var(--plum)}
+.sticky-sub{position:sticky;bottom:0;background:linear-gradient(transparent,var(--paper) 25%);padding:14px 0 4px;margin-top:10px}
+
+/* ---------- results ---------- */
+.big{font-family:Georgia,serif;font-size:3.6rem;font-weight:700;color:var(--plum);line-height:1}
+.breakdown{width:100%;border-collapse:collapse;margin-top:8px}
+.breakdown td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:.97rem}
+.meter{height:10px;background:var(--lilac);border-radius:99px;overflow:hidden;min-width:100px}
+.meter>i{display:block;height:100%}
+.rev{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:9px 0;background:#fff}
+.rev.bad{border-left:5px solid var(--red)}
+.rev.good{border-left:5px solid var(--sage)}
+.tag{font-size:13px;font-weight:700;color:#fff;background:var(--sage);border-radius:6px;padding:2px 8px}
+.rev.bad .tag{background:var(--red)}
+.ev{background:#FFF2D6;border-radius:8px;padding:9px 12px;margin-top:8px;font-family:Georgia,serif;font-size:.97rem}
+.cert{background:#fff;border:3px double var(--plum);border-radius:8px;padding:34px 26px;text-align:center;margin:20px 0}
+.cert h2{font-family:Georgia,serif;font-size:1.95rem;margin:.2em 0;color:var(--plum)}
+.cert .nm{font-family:Georgia,serif;font-size:2rem;border-bottom:2px solid var(--bronze);display:inline-block;padding:0 24px 4px;margin:12px 0}
+.foot{text-align:center;color:var(--muted);font-size:14px;padding:24px 0 8px;border-top:1px solid var(--line);margin-top:28px}
+
+@media (max-width:820px){
+  #split{display:block;height:auto}
+  #pane1{flex:none;width:100%;border-right:none;border-bottom:3px solid var(--plum);max-height:46vh;padding:16px}
+  #pane2{padding:16px 16px 60px}
+  #divider{display:none}
+  body{font-size:17px}
+  h1{font-size:1.6rem}
+  .inline-in{width:120px}
+}
+@media print{.bar,.btn,.noprint,#divider{display:none !important} body{background:#fff}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand">Reading Test 3 <span>·</span> Communication</div>
+    <div class="stats">
+      <div class="stat" id="sPhase">Getting started</div>
+      <div class="stat">Answered <b id="sAns">0</b>/20</div>
+      <button class="btn alt sm hide" id="btnBackTeach" onclick="goTeach()">Question types</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= START ================= -->
+<section id="vStart"><div class="wrap">
+  <div style="padding-top:26px">
+    <div class="kicker">B1+ / B2 · Band 6 target · Wordlist 3 vocabulary in context</div>
+    <h1>The Message and the Machine</h1>
+    <p class="lead">A 620-word passage and 20 questions, in the computer-delivered IELTS layout: passage on the left,
+    questions on the right. Five question types, none of which appeared in Reading Tests 1 and 2.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">What is in this test</h3>
+    <table class="tbl">
+      <tr><th>Questions</th><th>Type</th><th>What you write</th></tr>
+      <tr><td>1–6</td><td>Summary completion with a word list</td><td>Choose a word from a box of ten</td></tr>
+      <tr><td>7–11</td><td>Table completion</td><td>No more than two words from the passage</td></tr>
+      <tr><td>12–15</td><td>Classification</td><td>Choose A, B or C</td></tr>
+      <tr><td>16–17</td><td>Choose TWO letters</td><td>Two answers, two marks</td></tr>
+      <tr><td>18–19</td><td>Note completion</td><td>One word only</td></tr>
+      <tr><td>20</td><td>Main idea / best title</td><td>Choose one answer</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <label class="fld" for="nm">Your name (it goes on the certificate)</label>
+    <input type="text" id="nm" placeholder="e.g. Khalid Al Mazrouei" autocomplete="name">
+    <div class="row" style="margin-top:16px">
+      <button class="btn" onclick="startTeach()">Learn the five question types</button>
+      <button class="btn alt" onclick="document.getElementById('loadFile').click()">Load saved answers</button>
+      <input type="file" id="loadFile" accept=".json" class="hide" onchange="loadJSON(event)">
+    </div>
+  </div>
+
+  <div class="warn"><b>Do the teaching part first.</b> Each of these five types has one trap that costs Band 6 students
+  marks every time. Five short lessons, each with one practice question — about eight minutes.</div>
+
+  <div class="foot">Designed by: Nazila Motahari &nbsp;|&nbsp; HCT Abu Dhabi &nbsp;|&nbsp; Companion to B1+ Vocabulary List 3</div>
+</div></section>
+
+<!-- ================= TEACHING ================= -->
+<section id="vTeach" class="hide"><div class="wrap">
+  <h1 id="tTitle" style="margin-bottom:0"></h1>
+  <div class="steps" id="tSteps"></div>
+  <div class="card" id="tCard"></div>
+  <div class="row noprint">
+    <button class="btn alt" id="tPrev" onclick="teachMove(-1)">← Previous</button>
+    <button class="btn" id="tNext" onclick="teachMove(1)">Next type →</button>
+    <button class="btn gold hide" id="tGo" onclick="startTest()">Start the test</button>
+    <button class="btn gold hide" id="tBack" onclick="results()">← Back to my results</button>
+  </div>
+</div></section>
+
+<!-- ================= TEST ================= -->
+<section id="vTest" class="hide">
+  <div id="split">
+    <div id="pane1">
+      <div class="ptitle">The Message and the Machine</div>
+      <div class="psub">Read the passage and answer Questions 1–20. Tap a question number to jump to its paragraph.</div>
+      <div class="passage" id="passage"></div>
+    </div>
+    <div id="divider" role="separator" aria-label="Resize panels" tabindex="0"></div>
+    <div id="pane2">
+      <div id="qHolder"></div>
+      <div class="sticky-sub">
+        <button class="btn gold" onclick="submitTest()">Submit my answers</button>
+        <button class="btn alt sm" onclick="saveJSON()">Save and finish later</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="vRes" class="hide"><div class="wrap">
+  <div class="card" style="text-align:center">
+    <div id="rEmoji" style="font-size:2.8rem"></div>
+    <div class="big" id="rScore">0/20</div>
+    <div style="color:var(--muted);font-weight:600" id="rBand"></div>
+    <h2 id="rMsg" style="margin-top:.3em"></h2>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Accuracy by question type</h3>
+    <table class="breakdown" id="rBreak"></table>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:0">The type with the lowest bar is the one to practise next.</p>
+  </div>
+
+  <div id="rCert"></div>
+
+  <div class="card noprint">
+    <div class="row">
+      <button class="btn" onclick="showReview()">Review every answer</button>
+      <button class="btn alt" onclick="goTeach()">Review the question types</button>
+      <button class="btn alt" onclick="saveJSON()">Download my results (.json)</button>
+      <button class="btn alt" onclick="retake()">Take the test again</button>
+    </div>
+  </div>
+
+  <div id="rReview"></div>
+  <div class="foot">Designed by: Nazila Motahari &nbsp;|&nbsp; HCT Abu Dhabi</div>
+</div></section>
+
+<canvas id="confetti" class="hide"></canvas>
+
+<script>
+/* =========================================================
+   PASSAGE
+   ========================================================= */
+const PARAS=[
+["A","Every time a new way of sending messages appears, people worry about it. When writing began to spread in ancient Greece, serious thinkers had doubts about it; they were certain that students who could write things down would stop training their memories. Two thousand years later, when the printing press made it cheap to publish books, several governments decided that political ideas were now travelling too fast, and tried to control them. According to media historians, almost every communication technology of the last two thousand years has been welcomed and feared at the same time — and usually by the same people."],
+["B","Before printing, most information reached people through the ear rather than the eye. Poetry was the storage system of the ancient world. A poem with a regular rhythm and repeated sounds is far easier to hold in the mind than ordinary speech, so laws, family histories and news were often kept in verse and performed aloud. A private reader was rare; a listener standing in a group was normal. Information was also slow, but it was shared: the person telling the story and the person hearing it stood in the same room, and either of them could interrupt."],
+["C","Printing changed the direction of communication. A printed page could travel much further than a voice, but it travelled one way only, and the reader could not answer back. For roughly four hundred years the main skill of a writer was to imagine an audience they would never meet. Newspapers, and later radio and television, worked in the same way: a small number of people spoke and a very large number listened. Because producing a newspaper or running a television station was expensive, only a few organisations could reach the public at all."],
+["D","Social media removed that wall, and it did so in a relatively short time. Facebook is not much more than twenty years old, yet most of the planet now carries a publishing house in one pocket. The attraction is easy to understand: anyone can publish, anyone can reply, and friendships can survive across continents that the friends may never cross. Advertising changed too. Instead of paying a newspaper to advertise to everybody, a company can now persuade one exact group of people, and can measure within minutes whether the message worked."],
+["E","The same design, however, creates a problem that the age of print never had. When the channel is always open, attention becomes the thing that everyone is competing for. In one well-known experiment, students completed a set of tasks in three conditions: with their phone face-up on the desk, with it inside a bag on the floor, and with it in another room. The group whose phones were in another room performed best. What surprised the researchers was the middle group: simply knowing that the phone was near was enough to reduce performance, although the phone never rang. The phone did not have to interrupt anybody. The possibility of a message was itself the interruption."],
+["F","There are feelings involved as well. Surveys regularly find that people who spend a long time looking at other people's pictures report feeling more depressed about their own lives, and younger users in particular say they are sometimes embarrassed by things they themselves posted only a year earlier. Regret has become a normal part of communication: a message sent in one second can be read by thousands of people, and the button that would take it back does not exist."],
+["G","What happens next is not obvious. Some writers expect a return to smaller, more private conversation — closed groups rather than public feeds — and there are signs of this already. Others think the next system will be built around the voice again, which would be a strange kind of circle: after five hundred years of print, back to the ear. What is unlikely, on the evidence of the last two thousand years, is that people will simply stop. The tools keep changing; the wish to be heard does not."]
+];
+
+const WORDBOX=[
+ {l:"A",w:"doubts"},{l:"B",w:"certain"},{l:"C",w:"regular"},{l:"D",w:"reader"},{l:"E",w:"listener"},
+ {l:"F",w:"political"},{l:"G",w:"exhibition"},{l:"H",w:"direction"},{l:"I",w:"expensive"},{l:"J",w:"secret"}
+];
+
+/* =========================================================
+   QUESTIONS (20 marks)
+   ========================================================= */
+const ITEMS=[
+/* 1-6 summary, word list */
+{n:1,g:"sum",t:"Summary completion",a:"A",para:0,ev:"serious thinkers had doubts about it",why:"The passage says thinkers <i>had doubts about</i> writing. <b>Doubts</b> is the noun that fits after <i>had</i>. <i>Certain</i> is the trap — it is in the passage, but it means the opposite."},
+{n:2,g:"sum",t:"Summary completion",a:"F",para:0,ev:"political ideas were now travelling too fast",why:"Governments worried about <b>political</b> ideas. The gap needs an adjective before <i>ideas</i>."},
+{n:3,g:"sum",t:"Summary completion",a:"C",para:1,ev:"A poem with a regular rhythm and repeated sounds",why:"<b>Regular</b> rhythm. The gap sits before the noun <i>rhythm</i>, so only an adjective can go there."},
+{n:4,g:"sum",t:"Summary completion",a:"D",para:1,ev:"A private reader was rare; a listener standing in a group was normal",why:"A private <b>reader</b> was rare. <i>Listener</i> is the trap: the passage says listeners were normal, not unusual."},
+{n:5,g:"sum",t:"Summary completion",a:"H",para:2,ev:"Printing changed the direction of communication",why:"Printing changed the <b>direction</b> of communication — messages went one way only."},
+{n:6,g:"sum",t:"Summary completion",a:"I",para:2,ev:"Because producing a newspaper or running a television station was expensive",why:"The equipment was <b>expensive</b>, so few organisations could reach the public."},
+/* 7-11 table */
+{n:7,g:"tab",t:"Table completion",a:"poetry",acc:["poetry"],para:1,ev:"Poetry was the storage system of the ancient world",why:"<b>Poetry</b>. Copy the word exactly as it appears — not <i>poem</i>, which is a different form."},
+{n:8,g:"tab",t:"Table completion",a:"slow",acc:["slow"],para:1,ev:"Information was also slow, but it was shared",why:"<b>Slow</b>. The table says <i>information was ___</i>, so you need the adjective, not <i>slowly</i>."},
+{n:9,g:"tab",t:"Table completion",a:"answer back",acc:["answer back","reply","answer"],para:2,ev:"the reader could not answer back",why:"<b>Answer back</b> — two words, which is allowed here. Students often write <i>could not answer back</i> and go over the word limit."},
+{n:10,g:"tab",t:"Table completion",a:"attention",acc:["attention"],para:4,ev:"attention becomes the thing that everyone is competing for",why:"<b>Attention</b> is what everyone competes for once the channel is always open."},
+{n:11,g:"tab",t:"Table completion",a:"group",acc:["group"],para:3,ev:"a company can now persuade one exact group of people",why:"<b>Group</b>. The passage says <i>one exact group of people</i>."},
+/* 12-15 classification */
+{n:12,g:"cls",t:"Classification",a:"B",para:2,ev:"the main skill of a writer was to imagine an audience they would never meet",why:"This is the age of print (<b>B</b>). The writer could not see or hear the audience."},
+{n:13,g:"cls",t:"Classification",a:"A",para:1,ev:"stood in the same room, and either of them could interrupt",why:"The age of the voice (<b>A</b>). Speaker and listener shared one room."},
+{n:14,g:"cls",t:"Classification",a:"C",para:3,ev:"can measure within minutes whether the message worked",why:"The age of the feed (<b>C</b>). Only online advertising gives results in minutes."},
+{n:15,g:"cls",t:"Classification",a:"B",para:2,ev:"only a few organisations could reach the public at all",why:"The age of print (<b>B</b>). Cost kept the number of broadcasters small."},
+/* 16-17 choose two */
+{n:16,g:"two",t:"Choose TWO letters",a:["A","C"],para:4,
+ ev:"students completed a set of tasks in three conditions … What surprised the researchers was the middle group",
+ why:"<b>A</b> and <b>C</b>. There were three conditions, and the middle group (phone in a bag) surprised the researchers. B is wrong — the best group had phones in another room. D is wrong — the phone never rang. E is never mentioned."},
+/* 18-19 notes */
+{n:18,g:"note",t:"Note completion",a:"depressed",acc:["depressed"],para:5,ev:"report feeling more depressed about their own lives",why:"<b>Depressed</b>. The note says <i>feeling more ___</i>, so you need the adjective exactly as written."},
+{n:19,g:"note",t:"Note completion",a:"expect",acc:["expect"],para:6,ev:"Some writers expect a return to smaller, more private conversation",why:"<b>Expect</b>. Copy the verb in the form the passage uses — the note keeps the present tense."},
+/* 20 main idea */
+{n:20,g:"main",t:"Main idea",a:"B",para:6,ev:"The tools keep changing; the wish to be heard does not.",
+ why:"<b>B</b>. The passage covers two thousand years and three different systems, and its last line is about the wish to be heard. A and D are only parts of one paragraph; C is far too narrow."}
+];
+
+const GROUPS={sum:"Summary completion",tab:"Table completion",cls:"Classification",two:"Choose TWO letters",note:"Note completion",main:"Main idea"};
+
+/* =========================================================
+   TEACHING CARDS
+   ========================================================= */
+const TEACH=[
+{title:"Summary completion with a word list",
+ tests:"Whether you can follow one part of the passage in a shorter, reworded form, and choose a word that fits both the <b>meaning</b> and the <b>grammar</b> of the gap.",
+ trap:"Students choose a word that they can see in the passage without checking whether the summary says the same thing. Word lists always contain a word from the passage that means the <i>opposite</i>.",
+ method:["Read the whole summary first. Find which paragraphs it covers.",
+  "For each gap, decide the word class you need: noun, adjective, verb or adverb. Look at the words on both sides of the gap.",
+  "Cross out every word in the box that is the wrong word class.",
+  "Now find the place in the passage and check the meaning, not just the word."],
+ mini:{q:"The summary says: <i>Ancient thinkers had ______ about writing.</i> The passage says: <i>serious thinkers had doubts about it; they were certain that students … would stop training their memories.</i>",
+  o:["certain","doubts","memories"],a:1,
+  fb:"<b>Doubts.</b> <i>Certain</i> appears in the passage, but it describes what they were sure of — it is the trap. After <i>had</i> you also need a noun, and <i>certain</i> is an adjective."}},
+
+{title:"Table completion",
+ tests:"Whether you can find specific details fast and copy them <b>exactly</b>. The table's columns tell you what kind of information each gap needs.",
+ trap:"Going over the word limit, or changing the word's form. <i>NO MORE THAN TWO WORDS</i> means two is the maximum — and <i>slowly</i> is marked wrong if the passage says <i>slow</i>.",
+ method:["Read the column headings. They tell you the category of every answer in that column.",
+  "Use the rows you can already see to work out which paragraph each row comes from — tables usually follow the order of the passage.",
+  "Predict the word class before you look.",
+  "Copy from the passage, letter for letter. Do not improve the grammar."],
+ mini:{q:"Instruction: <i>NO MORE THAN TWO WORDS</i>. The passage says: <i>Information was also slow, but it was shared.</i> The table gap is: <i>information was ______</i>. Which answer gets the mark?",
+  o:["slowly","very slow indeed","slow"],a:2,
+  fb:"<b>Slow.</b> <i>Slowly</i> is the wrong form and would be marked wrong. <i>Very slow indeed</i> is three words, over the limit. Copy exactly, and copy the minimum."}},
+
+{title:"Classification",
+ tests:"Whether you can attach each statement to the right category — here, three periods of history. The categories repeat, so the answers are not in passage order.",
+ trap:"Assuming each letter is used once. In classification, one letter can be the answer two or three times, and one letter may not appear at all.",
+ method:["Write the three categories at the top of your page in your own words.",
+  "Read the statement and underline the idea, not the words.",
+  "Find that idea in the passage and check which category surrounds it.",
+  "Never leave a gap blank — with only three choices, a guess is worth taking."],
+ mini:{q:"Categories: <b>A</b> the age of the voice, <b>B</b> the age of print, <b>C</b> the age of the feed. Statement: <i>Writers had to imagine people they would never meet.</i>",
+  o:["A — the age of the voice","B — the age of print","C — the age of the feed"],a:1,
+  fb:"<b>B.</b> The passage says the writer's main skill was <i>to imagine an audience they would never meet</i>, and that sentence is in the paragraph about printing."}},
+
+{title:"Choose TWO letters",
+ tests:"Careful reading of one short part of the passage. There are five options and exactly two are correct — and you get a mark for each correct letter.",
+ trap:"Choosing an option because it contains words from the passage. Wrong options are built from real words in a false combination — often by changing a number, or by swapping which group did what.",
+ method:["Find the part of the passage the question names, and read it twice.",
+  "Take the options one at a time. Ask: is this <b>stated</b> in the passage?",
+  "Reject anything that is only 'probably true'. IELTS marks what is written.",
+  "Choose exactly two. Choosing three scores zero, even if two of them are right."],
+ mini:{q:"Passage: <i>students completed a set of tasks in three conditions … The group whose phones were in another room performed best.</i> Which option is <u>false</u>?",
+  o:["Students worked in three different conditions.","The students who kept phones in a bag scored highest.","One group had phones in another room."],a:1,
+  fb:"<b>Option 2 is false.</b> The bag group is the <i>middle</i> group. The best group had phones in another room. This is the classic swap — real words, wrong pairing."}},
+
+{title:"Note completion",
+ tests:"The same skill as table completion, but the notes use dashes and bullets instead of columns, and they usually summarise one paragraph.",
+ trap:"Writing more than the limit. <i>ONE WORD ONLY</i> means one word — <i>very depressed</i> scores zero even though the meaning is right.",
+ method:["Read the heading of the notes. It names the paragraph you need.",
+  "Follow the bullets in order — notes almost always follow the passage order.",
+  "Decide the word class, then find the answer.",
+  "Count your words before you move on."],
+ mini:{q:"Instruction: <i>ONE WORD ONLY</i>. Passage: <i>people … report feeling more depressed about their own lives.</i> Note: <i>People report feeling more ______ .</i>",
+  o:["more depressed","depressed about","depressed"],a:2,
+  fb:"<b>Depressed.</b> <i>More</i> is already printed in the note, so repeating it is wrong; <i>depressed about</i> is two words and the preposition is not needed."}}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const STATE={name:"",ans:{},teachDone:[],ti:0,submitted:false,score:0};
+const $=id=>document.getElementById(id);
+function show(id){["vStart","vTeach","vTest","vRes"].forEach(v=>$(v).classList.add("hide"));$(id).classList.remove("hide");window.scrollTo(0,0);}
+function norm(s){return (s||"").toLowerCase().trim().replace(/[.,!?;:'"()]/g,"").replace(/\s+/g," ");}
+function esc(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function toast(m){const d=document.createElement("div");d.textContent=m;
+ d.style.cssText="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;z-index:200;font-size:15px;max-width:90%";
+ document.body.appendChild(d);setTimeout(()=>d.remove(),2600);}
+function countAns(){
+  let n=0;
+  ITEMS.forEach(it=>{const v=STATE.ans[it.n];
+    if(it.g==="two"){ if(Array.isArray(v)&&v.length===2) n+=2; }
+    else if(v&&String(v).trim()) n++;
+  });
+  $("sAns").textContent=n; return n;
+}
+
+/* =========================================================
+   TEACHING
+   ========================================================= */
+function startTeach(){STATE.name=$("nm").value.trim()||"Student";STATE.ti=0;goTeach();}
+function goTeach(){show("vTeach");$("sPhase").textContent="Learning the question types";$("btnBackTeach").classList.add("hide");renderTeach();}
+function renderTeach(){
+  const t=TEACH[STATE.ti];
+  $("tTitle").textContent=t.title;
+  $("tSteps").innerHTML=TEACH.map((x,i)=>
+    '<span class="step'+(i===STATE.ti?" on":(STATE.teachDone.includes(i)?" ok":""))+'">'+(i+1)+". "+x.title.split(" ")[0]+'</span>').join("");
+  $("tCard").innerHTML=
+    '<div class="tbox"><h4>What it tests</h4>'+t.tests+'</div>'+
+    '<div class="tbox trap"><h4>The trap</h4>'+t.trap+'</div>'+
+    '<div class="tbox"><h4>The method</h4><ol class="method">'+t.method.map(m=>"<li>"+m+"</li>").join("")+'</ol></div>'+
+    '<div class="mini"><h3 style="margin-top:0">Try it</h3><p>'+t.mini.q+'</p><div class="opts" id="miniOpts">'+
+      t.mini.o.map((o,i)=>'<label><input type="radio" name="mini" value="'+i+'" onchange="miniCheck('+i+')">'+o+'</label>').join("")+
+    '</div><div id="miniFb"></div></div>';
+  $("tPrev").disabled = STATE.ti===0;
+  $("tNext").classList.toggle("hide",STATE.ti===TEACH.length-1);
+  $("tGo").classList.toggle("hide",STATE.ti!==TEACH.length-1||STATE.submitted);
+  $("tBack").classList.toggle("hide",!STATE.submitted);
+}
+function miniCheck(i){
+  const t=TEACH[STATE.ti];
+  document.querySelectorAll("#miniOpts label").forEach((l,k)=>{
+    l.classList.toggle("on",k===i);
+    l.style.borderColor = k===t.mini.a ? "var(--sage)" : (k===i?"var(--red)":"var(--line)");
+    if(k===t.mini.a) l.style.background="#EAF5EF";
+  });
+  $("miniFb").innerHTML='<div class="tbox" style="border-left-color:'+(i===t.mini.a?"var(--sage)":"var(--red)")+'">'+
+    (i===t.mini.a?"<h4 style='color:var(--sage)'>That's it</h4>":"<h4 style='color:var(--red)'>Look again</h4>")+t.mini.fb+'</div>';
+  if(!STATE.teachDone.includes(STATE.ti)) STATE.teachDone.push(STATE.ti);
+  renderSteps();
+}
+function renderSteps(){
+  $("tSteps").innerHTML=TEACH.map((x,i)=>
+    '<span class="step'+(i===STATE.ti?" on":(STATE.teachDone.includes(i)?" ok":""))+'">'+(i+1)+". "+x.title.split(" ")[0]+'</span>').join("");
+}
+function teachMove(d){
+  const n=STATE.ti+d;
+  if(n<0||n>=TEACH.length) return;
+  STATE.ti=n; renderTeach(); window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================================================
+   TEST
+   ========================================================= */
+function startTest(){
+  show("vTest");
+  $("sPhase").textContent="Reading test";
+  $("btnBackTeach").classList.remove("hide");
+  buildPassage(); buildQuestions(); countAns();
+}
+function buildPassage(){
+  $("passage").innerHTML=PARAS.map((p,i)=>
+    '<p id="p'+i+'"><span class="pl">'+p[0]+'</span>'+p[1]+'</p>').join("");
+}
+function litPara(i){
+  document.querySelectorAll("#passage p").forEach(p=>p.classList.remove("lit"));
+  const el=$("p"+i); if(!el) return;
+  el.classList.add("lit");
+  el.scrollIntoView({behavior:"smooth",block:"center"});
+  setTimeout(()=>el.classList.remove("lit"),2600);
+}
+const BY_N={}; ITEMS.forEach(it=>BY_N[it.n]=it); BY_N[17]=BY_N[16];
+function qn(n){const it=BY_N[n];return '<button class="qn'+(STATE.ans[n]&&String(STATE.ans[n]).length?" filled":"")+'" id="qn'+n+'" title="Show the paragraph in the passage" onclick="litPara('+it.para+')">'+n+'</button>';}
+
+function buildQuestions(){
+  const box=WORDBOX.map(w=>'<div><b>'+w.l+'</b> &nbsp;'+w.w+'</div>').join("");
+  const sel=n=>'<select onchange="setAns('+n+',this.value)"><option value="">—</option>'+
+    WORDBOX.map(w=>'<option value="'+w.l+'"'+(STATE.ans[n]===w.l?" selected":"")+'>'+w.l+" — "+w.w+'</option>').join("")+'</select>';
+  const inp=n=>'<input type="text" class="inline-in" value="'+esc(STATE.ans[n]||"")+'" oninput="setAns('+n+',this.value)" autocomplete="off" spellcheck="false" aria-label="Question '+n+'">';
+
+  let h="";
+
+  /* 1-6 */
+  h+='<div class="qgrp"><h3>Questions 1–6</h3>'+
+    '<div class="inst">Complete the summary of paragraphs <b>A–C</b>. Choose <b>ONE WORD</b> from the box for each gap. Write the correct letter, <b>A–J</b>.</div>'+
+    '<div class="wordbox">'+box+'</div>'+
+    '<div class="sumtext"><b>The two-thousand-year worry</b><br>'+
+    'When a new way of communicating appears, people react in two ways at once. Ancient thinkers had '+
+    '<b>1</b> '+sel(1)+' about writing, and centuries later governments were afraid that <b>2</b> '+sel(2)+
+    ' ideas would spread too quickly. In the age of the voice, poems were easy to remember because they had a <b>3</b> '+sel(3)+
+    ' rhythm, and a private <b>4</b> '+sel(4)+' was unusual — most people received information in a group. '+
+    'Printing then changed the <b>5</b> '+sel(5)+' of communication, so that messages travelled one way only. '+
+    'Because the equipment was <b>6</b> '+sel(6)+', very few organisations were able to reach the public.</div>'+
+    '<div class="row" style="margin-top:10px">'+[1,2,3,4,5,6].map(n=>qn(n)).join("")+'</div></div>';
+
+  /* 7-11 */
+  h+='<div class="qgrp"><h3>Questions 7–11</h3>'+
+    '<div class="inst">Complete the table. Choose <b>NO MORE THAN TWO WORDS</b> from the passage for each answer.</div>'+
+    '<table class="tbl"><tr><th>Age</th><th>Typical form</th><th>What the audience could do</th><th>Main limitation</th></tr>'+
+    '<tr><td>The voice</td><td><b>7</b> '+inp(7)+', performed aloud</td><td>interrupt the speaker</td><td>information was <b>8</b> '+inp(8)+'</td></tr>'+
+    '<tr><td>Print</td><td>newspapers, radio, television</td><td>read or listen only — could not <b>9</b> '+inp(9)+'</td><td>producing it was expensive</td></tr>'+
+    '<tr><td>The feed</td><td>posts and replies</td><td>reply to anyone</td><td>everyone competes for <b>10</b> '+inp(10)+'</td></tr>'+
+    '</table>'+
+    '<p style="font-size:15.5px;margin:10px 0 0"><b>Advertising today:</b> instead of paying a newspaper to reach everybody, a company can persuade one exact <b>11</b> '+inp(11)+' of people.</p>'+
+    '<div class="row" style="margin-top:10px">'+[7,8,9,10,11].map(n=>qn(n)).join("")+'</div></div>';
+
+  /* 12-15 */
+  const clsOpts=[["A","the age of the voice"],["B","the age of print"],["C","the age of the feed"]];
+  const clsSel=n=>'<select onchange="setAns('+n+',this.value)"><option value="">—</option>'+
+    clsOpts.map(o=>'<option value="'+o[0]+'"'+(STATE.ans[n]===o[0]?" selected":"")+'>'+o[0]+" — "+o[1]+'</option>').join("")+'</select>';
+  const clsQ=[[12,"Writers had to imagine people they would never meet."],
+              [13,"The person speaking and the person listening were in the same place."],
+              [14,"Companies can check very quickly whether their message worked."],
+              [15,"Only a small number of organisations were able to reach a large audience."]];
+  h+='<div class="qgrp"><h3>Questions 12–15</h3>'+
+    '<div class="inst">Which age does each statement describe? Write the correct letter, <b>A</b>, <b>B</b> or <b>C</b>. '+
+    'You may use any letter <b>more than once</b>.<br><b>A</b> the age of the voice &nbsp;·&nbsp; <b>B</b> the age of print &nbsp;·&nbsp; <b>C</b> the age of the feed</div>'+
+    clsQ.map(([n,txt])=>'<div class="qitem">'+qn(n)+'<div class="qbody">'+txt+'<div style="margin-top:7px;max-width:320px">'+clsSel(n)+'</div></div></div>').join("")+
+    '</div>';
+
+  /* 16-17 */
+  const twoOpts=["Students worked in three different conditions.",
+    "The students who kept their phones in a bag scored the highest.",
+    "The researchers were surprised by the results of the middle group.",
+    "The phones rang several times while the students were working.",
+    "The experiment took place in a university library."];
+  const cur=Array.isArray(STATE.ans[16])?STATE.ans[16]:[];
+  h+='<div class="qgrp"><h3>Questions 16 and 17</h3>'+
+    '<div class="inst">Choose <b>TWO</b> letters, <b>A–E</b>. Which TWO statements about the experiment in paragraph <b>E</b> are correct?</div>'+
+    '<div class="opts" id="twoBox">'+twoOpts.map((o,i)=>{
+      const L="ABCDE"[i];
+      return '<label'+(cur.includes(L)?' class="on"':'')+'><input type="checkbox" value="'+L+'"'+(cur.includes(L)?" checked":"")+' onchange="setTwo()"><b>'+L+'</b> &nbsp;'+o+'</label>';}).join("")+'</div>'+
+    '<div style="font-size:15px;color:var(--muted)">Selected: <b id="twoCount">'+cur.length+'</b> of 2 &nbsp; '+qn(16)+'</div></div>';
+
+  /* 18-19 */
+  h+='<div class="qgrp"><h3>Questions 18 and 19</h3>'+
+    '<div class="inst">Complete the notes. Choose <b>ONE WORD ONLY</b> from the passage for each answer.</div>'+
+    '<div class="sumtext" style="line-height:1.9"><b>Feelings and the future</b><br>'+
+    '• People who spend a long time looking at others\' pictures report feeling more <b>18</b> '+inp(18)+' about their own lives.<br>'+
+    '• Some writers <b>19</b> '+inp(19)+' a return to smaller, more private conversation.</div>'+
+    '<div class="row" style="margin-top:10px">'+[18,19].map(n=>qn(n)).join("")+'</div></div>';
+
+  /* 20 */
+  const mainOpts=["Why social media makes young people unhappy",
+    "Two thousand years of new ways to be heard",
+    "The invention and spread of the printing press",
+    "How to concentrate in a world full of phones"];
+  h+='<div class="qgrp"><h3>Question 20</h3>'+
+    '<div class="inst">Choose the correct letter, <b>A</b>, <b>B</b>, <b>C</b> or <b>D</b>. Which is the best title for the whole passage?</div>'+
+    '<div class="opts">'+mainOpts.map((o,i)=>{const L="ABCD"[i];
+      return '<label'+(STATE.ans[20]===L?' class="on"':'')+'><input type="radio" name="q20" value="'+L+'"'+(STATE.ans[20]===L?" checked":"")+' onchange="setAns(20,\''+L+'\')"><b>'+L+'</b> &nbsp;'+o+'</label>';}).join("")+'</div></div>';
+
+  $("qHolder").innerHTML=h;
+}
+function setAns(n,v){
+  STATE.ans[n]=v;
+  const b=$("qn"+n); if(b) b.classList.toggle("filled",!!String(v).trim());
+  document.querySelectorAll('.opts label').forEach(l=>{const i=l.querySelector("input");if(i&&i.type==="radio")l.classList.toggle("on",i.checked);});
+  countAns();
+}
+function setTwo(){
+  const picked=[...document.querySelectorAll("#twoBox input:checked")].map(i=>i.value);
+  if(picked.length>2){
+    toast("Only two answers are allowed. Remove one first.");
+    document.querySelectorAll("#twoBox input").forEach(i=>{if(i.value===picked[picked.length-1])i.checked=false;});
+    return setTwo();
+  }
+  STATE.ans[16]=picked;
+  $("twoCount").textContent=picked.length;
+  document.querySelectorAll("#twoBox label").forEach(l=>l.classList.toggle("on",l.querySelector("input").checked));
+  const b=$("qn16"); if(b) b.classList.toggle("filled",picked.length===2);
+  countAns();
+}
+
+/* ---------- draggable divider ---------- */
+(function(){
+  const d=$("divider"), s=$("split");
+  let drag=false;
+  const move=x=>{
+    const r=s.getBoundingClientRect();
+    let pct=(x-r.left)/r.width*100;
+    pct=Math.max(25,Math.min(75,pct));
+    $("pane1").style.flex="0 0 "+pct+"%";
+  };
+  d.addEventListener("pointerdown",e=>{drag=true;d.setPointerCapture(e.pointerId);e.preventDefault();});
+  d.addEventListener("pointermove",e=>{if(drag)move(e.clientX);});
+  d.addEventListener("pointerup",e=>{drag=false;d.releasePointerCapture(e.pointerId);});
+  d.addEventListener("keydown",e=>{
+    const cur=parseFloat(($("pane1").style.flex||"0 0 50%").match(/([\d.]+)%/)[1]);
+    if(e.key==="ArrowLeft") $("pane1").style.flex="0 0 "+Math.max(25,cur-5)+"%";
+    if(e.key==="ArrowRight") $("pane1").style.flex="0 0 "+Math.min(75,cur+5)+"%";
+  });
+})();
+
+/* =========================================================
+   MARKING
+   ========================================================= */
+function markItem(it){
+  const v=STATE.ans[it.n];
+  if(it.g==="two"){
+    const p=Array.isArray(v)?v:[];
+    return p.filter(x=>it.a.includes(x)).length; // 0,1 or 2 marks
+  }
+  if(it.acc) return it.acc.some(a=>norm(a)===norm(v))?1:0;
+  return v===it.a?1:0;
+}
+function submitTest(){
+  const n=countAns();
+  if(n<20 && !confirm("You have answered "+n+" of 20 marks. Submit anyway?")) return;
+  STATE.submitted=true;
+  let score=0; ITEMS.forEach(it=>score+=markItem(it));
+  STATE.score=score;
+  results();
+}
+function bandOf(s){
+  if(s>=19) return "Band 8.0+";
+  if(s>=17) return "Band 7.0–7.5";
+  if(s>=15) return "Band 6.5";
+  if(s>=13) return "Band 6.0";
+  if(s>=11) return "Band 5.5";
+  if(s>=9) return "Band 5.0";
+  return "Band 4.5 or below";
+}
+function results(){
+  show("vRes"); $("sPhase").textContent="Results";
+  const s=STATE.score, pct=Math.round(s/20*100);
+  $("rScore").textContent=s+"/20";
+  $("rBand").textContent=bandOf(s)+" (indicative only — a real test has 40 questions)";
+  let e,m;
+  if(pct>=90){e="🏆";m="Excellent. These five question types are under control.";}
+  else if(pct>=80){e="🎉";m="Strong — you have earned the certificate.";}
+  else if(pct>=65){e="👍";m="A solid Band 6 result. Look at your weakest type below.";}
+  else if(pct>=50){e="📖";m="Halfway. Go back through the question-type lessons, then retake.";}
+  else{e="🔁";m="Start with the five lessons again — the traps are costing you marks, not the vocabulary.";}
+  $("rEmoji").textContent=e; $("rMsg").textContent=m;
+
+  const keys=Object.keys(GROUPS);
+  $("rBreak").innerHTML=keys.map(k=>{
+    const list=ITEMS.filter(i=>i.g===k);
+    const tot=list.reduce((a,i)=>a+(i.g==="two"?2:1),0);
+    const got=list.reduce((a,i)=>a+markItem(i),0);
+    const p=Math.round(got/tot*100);
+    return '<tr><td style="width:42%">'+GROUPS[k]+'</td><td style="width:15%"><b>'+got+'/'+tot+'</b></td>'+
+      '<td><div class="meter"><i style="width:'+p+'%;background:'+(p>=80?"var(--sage)":p>=50?"var(--bronze)":"var(--red)")+'"></i></div></td></tr>';
+  }).join("");
+
+  if(s>=16){
+    $("rCert").innerHTML='<div class="cert"><div style="font-size:2.6rem">🏅</div>'+
+      '<div style="letter-spacing:2px;color:var(--plum);font-weight:700;font-size:13.5px">Higher Colleges of Technology · Abu Dhabi</div>'+
+      '<h2>Certificate of Achievement</h2><p style="margin:0;color:var(--muted)">This certifies that</p>'+
+      '<div class="nm">'+esc(STATE.name)+'</div>'+
+      '<p style="max-width:46ch;margin:8px auto">has completed <b>IELTS Reading Test 3: The Message and the Machine</b>, '+
+      'scoring <b>'+s+'/20</b> ('+pct+'%) across summary completion, table completion, classification, multiple-answer and note-completion questions.</p>'+
+      '<p style="color:var(--muted);font-size:15px">'+new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+'</p>'+
+      '<p style="font-style:italic;margin-top:16px">Designed by: Nazila Motahari</p>'+
+      '<button class="btn gold noprint" onclick="window.print()" style="margin-top:8px">Print / save the certificate</button></div>';
+    confetti();
+  } else {
+    $("rCert").innerHTML='<div class="warn"><b>Certificate: not yet.</b> You need 16 out of 20. You are '+(16-s)+
+      ' mark'+((16-s)===1?"":"s")+' away — review the answers below, then take the test again.</div>';
+  }
+}
+function showReview(){
+  const html=Object.keys(GROUPS).map(k=>{
+    const list=ITEMS.filter(i=>i.g===k);
+    return '<h3>'+GROUPS[k]+'</h3>'+list.map(it=>{
+      const got=markItem(it), full=(it.g==="two"?2:1);
+      const v=STATE.ans[it.n];
+      const given = it.g==="two" ? (Array.isArray(v)&&v.length?v.join(" + "):"(no answer)") : (v&&String(v).trim()?String(v):"(no answer)");
+      const right = it.g==="two" ? it.a.join(" + ") : it.a;
+      const ok = got===full;
+      return '<div class="rev '+(ok?"good":"bad")+'"><span class="tag">'+got+'/'+full+'</span> '+
+        '<b>Q'+it.n+(it.g==="two"?"–17":"")+'</b> &nbsp;Your answer: '+esc(given)+
+        (ok?"":' &nbsp;·&nbsp; Correct: <b style="color:var(--sage)">'+esc(right)+'</b>')+
+        '<div style="font-size:15.5px;margin-top:6px">'+it.why+'</div>'+
+        '<div class="ev">Paragraph '+PARAS[it.para][0]+': “…'+it.ev+'…”</div></div>';
+    }).join("");
+  }).join("");
+  $("rReview").innerHTML='<div class="card"><h2 style="margin-top:0">Every answer, with the evidence</h2>'+html+'</div>';
+  $("rReview").scrollIntoView({behavior:"smooth"});
+}
+function retake(){
+  STATE.ans={}; STATE.submitted=false; STATE.score=0;
+  $("rReview").innerHTML=""; $("rCert").innerHTML="";
+  startTest();
+}
+
+/* =========================================================
+   SAVE / LOAD
+   ========================================================= */
+function saveJSON(){
+  const data={
+    app:"IELTS Reading Test 3 — The Message and the Machine (B1+ Wordlist 3)",
+    student:STATE.name, date:new Date().toISOString(),
+    submitted:STATE.submitted,
+    score:STATE.submitted?STATE.score:null, outOf:20,
+    band:STATE.submitted?bandOf(STATE.score):null,
+    byType:Object.keys(GROUPS).map(k=>{
+      const list=ITEMS.filter(i=>i.g===k);
+      return {type:GROUPS[k],
+        correct:STATE.submitted?list.reduce((a,i)=>a+markItem(i),0):null,
+        outOf:list.reduce((a,i)=>a+(i.g==="two"?2:1),0)};
+    }),
+    answers:ITEMS.map(it=>({n:it.n,type:it.t,given:STATE.ans[it.n]||"",correct:STATE.submitted?markItem(it)===(it.g==="two"?2:1):null})),
+    state:{ans:STATE.ans,teachDone:STATE.teachDone,submitted:STATE.submitted,score:STATE.score}
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="ReadingTest3-"+(STATE.name||"student").replace(/\s+/g,"-")+".json";
+  a.click(); URL.revokeObjectURL(a.href);
+  toast("Saved. Open this file with the Load button to carry on.");
+}
+function loadJSON(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result); if(!d.state) throw 0;
+      STATE.name=d.student||"Student";
+      STATE.ans=d.state.ans||{}; STATE.teachDone=d.state.teachDone||[];
+      STATE.submitted=!!d.state.submitted; STATE.score=d.state.score||0;
+      $("nm").value=STATE.name;
+      if(STATE.submitted){buildPassage();results();}
+      else{startTest();}
+      toast("Answers restored for "+STATE.name+".");
+    }catch(e){toast("That file could not be read. Choose a file saved by this app.");}
+  };
+  r.readAsText(f); ev.target.value="";
+}
+
+/* ---------- confetti ---------- */
+function confetti(){
+  const c=$("confetti"); c.classList.remove("hide");
+  const x=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const cols=["#5B3A70","#C17A2E","#3F7A63","#B5433F","#8A6AA8"];
+  let bits=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,
+    w:6+Math.random()*7,h:8+Math.random()*9,c:cols[(Math.random()*cols.length)|0],
+    v:1.6+Math.random()*3,r:Math.random()*6,s:(Math.random()-.5)*.2}));
+  let t=0;
+  (function loop(){t++;x.clearRect(0,0,c.width,c.height);
+    bits.forEach(b=>{b.y+=b.v;b.r+=b.s;x.save();x.translate(b.x,b.y);x.rotate(b.r);x.fillStyle=b.c;x.fillRect(-b.w/2,-b.h/2,b.w,b.h);x.restore();});
+    if(t<300)requestAnimationFrame(loop);else{x.clearRect(0,0,c.width,c.height);c.classList.add("hide");}})();
+}
+</script>
+</body>
+</html>
